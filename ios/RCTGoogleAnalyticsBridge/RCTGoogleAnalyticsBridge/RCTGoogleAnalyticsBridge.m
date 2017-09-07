@@ -251,6 +251,20 @@ RCT_EXPORT_METHOD(setUser:(NSString *)trackerId userId:(NSString *)userId)
          value:userId];
 }
 
+RCT_EXPORT_METHOD(setClientIdOnCustomDimension:(NSString *)trackerId clientId:(NSString *)customDimensionIndex)
+{
+    id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:trackerId];
+    [tracker set:[GAIFields customDimensionForIndex:[customDimensionIndex integerValue]]
+         value:[tracker get:kGAIClientId]];
+}
+
+RCT_EXPORT_METHOD(setCustomDimension:(NSString *)trackerId customDimensionIndex:(NSString *)customDimensionIndex customDimensionValue:(NSString*)customDimensionValue)
+{
+    id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:trackerId];
+    [tracker set:[GAIFields customDimensionForIndex:[customDimensionIndex integerValue]]
+         value:customDimensionValue];
+}
+
 RCT_EXPORT_METHOD(allowIDFA:(NSString *)trackerId enabled:(BOOL)enabled)
 {
     id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:trackerId];
@@ -320,15 +334,15 @@ RCT_EXPORT_METHOD(setCurrency:(NSString *)trackerId currencyCode:(NSString *)cur
 RCT_EXPORT_METHOD(trackCampaignFromUrl:(NSString *)trackerId urlString:(NSString *)urlString)
 {
     id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:trackerId];
-    
+
     // setCampaignParametersFromUrl: parses Google Analytics campaign ("UTM")
     // parameters from a string url into a Map that can be set on a Tracker.
     GAIDictionaryBuilder *hitParams = [[GAIDictionaryBuilder alloc] init];
-    
+
     // Set campaign data on the map, not the tracker directly because it only
     // needs to be sent once.
     [hitParams setCampaignParametersFromUrl:urlString];
-    
+
     // Campaign source is the only required campaign field. If previous call
     // did not set a campaign source, use the hostname as a referrer instead.
     NSURL *url = [NSURL URLWithString:urlString];
@@ -337,15 +351,15 @@ RCT_EXPORT_METHOD(trackCampaignFromUrl:(NSString *)trackerId urlString:(NSString
         [hitParams set:@"referrer" forKey:kGAICampaignMedium];
         [hitParams set:[url host] forKey:kGAICampaignSource];
     }
-    
+
     NSDictionary *hitParamsDict = [hitParams build];
-    
+
     // A screen name is required for a screen view.
     [tracker set:kGAIScreenName value:@"Init With Campaign"];
-    
+
     // Previous V3 SDK versions.
     // [tracker send:[[[GAIDictionaryBuilder createAppView] setAll:hitParamsDict] build]];
-    
+
     // SDK Version 3.08 and up.
     [tracker send:[[[GAIDictionaryBuilder createScreenView] setAll:hitParamsDict] build]];
 }

@@ -270,6 +270,26 @@ public class GoogleAnalyticsBridge extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void setClientIdOnCustomDimension(String trackerId, String customDimensionIndex)
+    {
+        Tracker tracker = getTracker(trackerId);
+
+        if (tracker != null) {
+            tracker.set("&cd" + customDimensionIndex, tracker.get("&cid"));
+        }
+    }
+
+    @ReactMethod
+    public void setCustomDimension(String trackerId, String customDimensionIndex, String customDimensionValue)
+    {
+        Tracker tracker = getTracker(trackerId);
+
+        if (tracker != null) {
+            tracker.set("&cd" + customDimensionIndex, customDimensionValue);
+        }
+    }
+
+    @ReactMethod
     public void allowIDFA(String trackerId, Boolean enabled)
     {
         Tracker tracker = getTracker(trackerId);
@@ -449,4 +469,5 @@ public class GoogleAnalyticsBridge extends ReactContextBaseJavaModule {
                                         .build());
         }
     }
+
 }

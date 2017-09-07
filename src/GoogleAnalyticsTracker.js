@@ -55,7 +55,7 @@ export class GoogleAnalyticsTracker {
   trackScreenView(screenName) {
     GoogleAnalyticsBridge.trackScreenView(this.id, screenName);
   }
-  
+
   /**
    * Track the campaign from url
    * @param  {String} urlString The url of the deep link
@@ -159,6 +159,23 @@ export class GoogleAnalyticsTracker {
   }
 
   /**
+   * Set the current clientId to custom dimension.
+   * @param {String} customDimensionIndex The custom dimension index
+   */
+  setClientIdOnCustomDimension(customDimensionIndex) {
+    GoogleAnalyticsBridge.setClientIdOnCustomDimension(this.id, customDimensionIndex);
+  }
+
+  /**
+   * Sets custom dimension for tracking.
+   * @param {String} customDimensionIndex The custom dimension index
+   * @param {String} customDimensionValue The custom dimension value
+   */
+  setCustomDimension(customDimensionIndex, customDimensionValue) {
+    GoogleAnalyticsBridge.setCustomDimension(this.id, customDimensionIndex, customDimensionValue);
+  }
+
+  /**
    * Sets if IDFA (identifier for advertisers) collection should be enabled
    * @param  {Boolean} enabled Defaults to true
    */
@@ -217,7 +234,7 @@ export class GoogleAnalyticsTracker {
   setSamplingRate(sampleRatio) {
     GoogleAnalyticsBridge.setSamplingRate(this.id, sampleRatio);
   }
-  
+
   /**
    * Sets the currency for tracking.
    * @param {String} currencyCode The currency ISO 4217 code
@@ -225,4 +242,5 @@ export class GoogleAnalyticsTracker {
   setCurrency(currencyCode) {
     GoogleAnalyticsBridge.setCurrency(this.id, currencyCode);
   }
+
 }
